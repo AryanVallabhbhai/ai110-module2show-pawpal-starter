@@ -58,23 +58,49 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 #   ...
 ```
 
-## 🧪 Testing PawPal+
+## Testing PawPal+
 
 ```bash
 # Run the full test suite:
-pytest
+python -m pytest
 
 # Run with coverage:
 pytest --cov
 ```
 
-Sample test output:
+**What the tests cover** (`tests/test_pawpal.py`):
+
+- **Task basics** — `mark_done()` flips completion; `add_task()` grows the pet's task list.
+- **Sorting correctness** — `sort_by_time()` returns out-of-order tasks in chronological (`HH:MM`) order.
+- **Recurrence logic** — completing a `daily` task spawns a new task due the following day, on the same pet, still incomplete.
+- **Conflict detection** — `detect_conflicts()` flags 2+ tasks sharing a date + time slot (even across different pets) and produces no false positives when times differ.
+
+Successful test run:
 
 ```
-# Paste your pytest output here
+============================= test session starts =============================
+platform win32 -- Python 3.12.6, pytest-9.0.3, pluggy-1.6.0
+rootdir: C:\Users\aBOSS\Documents\GitHub\ai110-module2show-pawpal-starter
+plugins: anyio-4.11.0
+collected 6 items
+
+tests/test_pawpal.py::test_task_completion PASSED                        [ 16%]
+tests/test_pawpal.py::test_task_addition PASSED                          [ 33%]
+tests/test_pawpal.py::test_sort_by_time_chronological PASSED             [ 50%]
+tests/test_pawpal.py::test_recurrence_creates_next_day_task PASSED       [ 66%]
+tests/test_pawpal.py::test_detect_conflicts_flags_duplicate_times PASSED [ 83%]
+tests/test_pawpal.py::test_detect_conflicts_no_false_positive PASSED     [100%]
+
+============================== 6 passed in 0.03s ==============================
 ```
 
-## 📐 Smarter Scheduling
+### Confidence level: (4/5)
+
+Core scheduling logic — sorting, recurrence, conflict detection — is covered and green.
+Docked one star because tests don't yet exercise weekly recurrence, month/year date
+rollover, empty-scheduler edge cases, or the Streamlit UI wiring in `app.py`.
+
+## Smarter Scheduling
 
 All scheduling logic lives in the `Scheduler` class in `pawpal_system.py` (recurrence math also uses `Task.next_due_date()`).
 
