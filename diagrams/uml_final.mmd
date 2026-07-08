@@ -1,0 +1,66 @@
+classDiagram
+    %% PawPal+ final architecture — matches pawpal_system.py
+
+    class Owner {
+        +int owner_id
+        +str name
+        +str email
+        +str phone
+        +list~Pet~ pets
+        +add_pet(pet) None
+        +remove_pet(pet) None
+        +list_pets() list~Pet~
+        +update_contact(email, phone) None
+    }
+
+    class Pet {
+        +int pet_id
+        +str name
+        +str species
+        +str breed
+        +int age
+        +Owner owner
+        +list~Task~ tasks
+        +add_task(task) None
+        +remove_task(task) None
+        +list_tasks() list~Task~
+        +update_info(name, age) None
+    }
+
+    class Task {
+        +int task_id
+        +str title
+        +str type
+        +date due_date
+        +str time
+        +str recurrence
+        +bool completed
+        +Pet pet
+        +mark_done() None
+        +mark_incomplete() None
+        +is_overdue() bool
+        +reschedule(new_date) None
+        +next_due_date() date
+    }
+
+    class Scheduler {
+        +list~Pet~ pets
+        +register_pet(pet) None
+        +all_tasks() list~Task~
+        +complete_task(task) Task
+        +get_due_today() list~Task~
+        +get_overdue() list~Task~
+        +get_upcoming(days) list~Task~
+        +get_tasks_for_pet(pet) list~Task~
+        +detect_conflicts() list~str~
+        +sort_by_time(tasks) list~Task~
+        +filter_tasks(completed, pet_name) list~Task~
+        -_next_task_id() int
+    }
+
+    Owner "1" o-- "*" Pet : owns
+    Pet "1" o-- "*" Task : has
+    Pet "1" --> "0..1" Owner : owner (back-ref)
+    Task "1" --> "0..1" Pet : pet (back-ref)
+    Scheduler "1" o-- "*" Pet : registry
+    Scheduler ..> Task : queries / spawns
