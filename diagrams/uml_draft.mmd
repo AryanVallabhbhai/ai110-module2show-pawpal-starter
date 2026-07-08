@@ -1,0 +1,54 @@
+classDiagram
+    class Owner {
+        +int owner_id
+        +string name
+        +string email
+        +string phone
+        +list~Pet~ pets
+        +add_pet(Pet pet) void
+        +remove_pet(Pet pet) void
+        +list_pets() list~Pet~
+        +update_contact(string email, string phone) void
+    }
+
+    class Pet {
+        +int pet_id
+        +string name
+        +string species
+        +string breed
+        +int age
+        +Owner owner
+        +list~Task~ tasks
+        +add_task(Task task) void
+        +remove_task(Task task) void
+        +list_tasks() list~Task~
+        +update_info(string name, int age) void
+    }
+
+    class Task {
+        +int task_id
+        +string title
+        +string type
+        +date due_date
+        +string recurrence
+        +bool completed
+        +Pet pet
+        +mark_done() void
+        +mark_incomplete() void
+        +is_overdue() bool
+        +reschedule(date new_date) void
+    }
+
+    class Scheduler {
+        +list~Task~ tasks
+        +add_task(Task task) void
+        +remove_task(Task task) void
+        +get_due_today() list~Task~
+        +get_overdue() list~Task~
+        +get_upcoming(int days) list~Task~
+        +get_tasks_for_pet(Pet pet) list~Task~
+    }
+
+    Owner "1" --> "many" Pet : owns
+    Pet "1" --> "many" Task : has
+    Scheduler "1" --> "many" Task : manages
