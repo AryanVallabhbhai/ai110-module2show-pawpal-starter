@@ -27,12 +27,16 @@
 **a. Constraints and priorities**
 
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
+    - I chose a time slot constraint to show if there are any clashing task. There is a filter constraint for the completion status.
 - How did you decide which constraints mattered most?
+    - I used the constraints that were already given in the data, due date, time, completed and recurrence.
 
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
+    -  There is no checking for task overlap, only if they start at the same time.
 - Why is that tradeoff reasonable for this scenario?
+    - Petpal works more as a remainder app, ensuring the owner is able to see what they need to do.
 
 ---
 

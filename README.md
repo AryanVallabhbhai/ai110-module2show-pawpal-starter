@@ -76,14 +76,43 @@ Sample test output:
 
 ## 📐 Smarter Scheduling
 
-> Fill in once you've implemented scheduling logic.
+All scheduling logic lives in the `Scheduler` class in `pawpal_system.py` (recurrence math also uses `Task.next_due_date()`).
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.sort_by_time()` | Sorts by time-of-day, ascending |
+| Filtering | `Scheduler.filter_tasks()` | By pet name and/or completion status |
+| Conflict handling | `Scheduler.detect_conflicts()` | Same date + time = clash, returns warnings |
+| Recurring tasks | `Scheduler.complete_task()`, `Task.next_due_date()` | Daily/weekly auto-respawn on complete |
+
+### Sorting — `Scheduler.sort_by_time()`
+
+Returns tasks ordered by time-of-day (ascending). Uses `sorted()` with a lambda
+key on the `"HH:MM"` string. Zero-padded 24-hour strings sort correctly
+lexicographically (`"09:00" < "10:30"`), so no time parsing is needed. Defaults
+to all registered tasks; pass a list to sort a subset (e.g. combine with a filter).
+
+### Filtering — `Scheduler.filter_tasks()`
+
+Filters tasks by `completed` status (True/False) and/or `pet_name`. Each filter is
+optional — an unset (`None`) filter is ignored, so calling with no args returns
+every task. Filters compose (e.g. `pet_name="Rex", completed=False`).
+
+### Conflict detection — `Scheduler.detect_conflicts()`
+
+Lightweight strategy: buckets every incomplete task by its `(due_date, time)` slot
+in a dict. Any slot holding 2+ tasks is a conflict — across the same pet or
+different pets. Returns a list of human-readable warning strings (empty = no
+conflicts). Never raises, so the caller prints the warning and keeps running.
+Tradeoff: matches exact time slots only (no task-duration overlap).
+
+### Recurring tasks — `Scheduler.complete_task()` + `Task.next_due_date()`
+
+When a `"daily"` or `"weekly"` task is completed via `complete_task()`, it is marked
+done and a fresh instance is auto-created for the next occurrence and attached to the
+same pet. `Task.next_due_date()` computes the next date with `timedelta`
+(daily → `+timedelta(days=1)`, weekly → `+timedelta(weeks=1)`), which handles
+month/year rollover correctly. One-time tasks (`recurrence=None`) spawn nothing.
 
 ## 📸 Demo Walkthrough
 
