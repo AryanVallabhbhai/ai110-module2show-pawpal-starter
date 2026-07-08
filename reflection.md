@@ -5,12 +5,20 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+    - I have an Owner, Pet, Task and Scheduler class. The owner class can have 1 or more pets. Pets can have 1 or more tasks. A scheduler can manage 1 or more classes.
 - What classes did you include, and what responsibilities did you assign to each?
+    - Owner class: contains information on the pet Owner. lists all pets owned. Can add and remove pets and update contact information
+    - Pet class: has information (id, name, species, breed, age, owner, tasks). Can add/remove/list tasks and update info
+    - Task class: (id, title, type, due date, recurring) mark task as complete/incomplete. checks if it is overdue and can reschedule
+    -
+
 
 **b. Design changes**
 
 - Did your design change during implementation?
+    - Yes
 - If yes, describe at least one change and why you made it.
+    - I added support for data sync between pet and owner, that way changes made to either class wouldn't have errors in copying over
 
 ---
 
